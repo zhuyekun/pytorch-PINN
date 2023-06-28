@@ -10,4 +10,4 @@ class ConstraintBase(abc.ABC):
         pass
 
     def loss(self, *args):
-        return torch.mean(self.residual(*args) ** 2)
+        return torch.mean(self.residual(*args) ** 2) * self.loss_weight
