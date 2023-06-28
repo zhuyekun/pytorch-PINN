@@ -4,15 +4,20 @@ from .base import GeometryBase
 
 
 class Rectangle1D(GeometryBase):
-    def __init__(self, xmin, xmax):
-        self.xmin = xmin
-        self.xmax = xmax
+    def __init__(self, min, max):
+        self.min = min
+        self.max = max
 
-    def sample_boundary(self):
-        pass
+    def sample_boundary(self, num_samples=1, rng=None):
+        assert num_samples <= 2, "num_samples must be less than or equal to 2"
+        if rng is None:
+            rng = np.random.default_rng()
+        return rng.choice([self.min, self.max], size=(num_samples,))
 
-    def sample_interior(self, num_samples):
-        coords = np.random.uniform(low=self.xmin, high=self.xmax, size=(num_samples,))
+    def sample_interior(self, num_samples, rng=None):
+        if rng is None:
+            rng = np.random.default_rng()
+        coords = rng.uniform(low=self.min, high=self.max, size=(num_samples,))
         return coords
 
 
