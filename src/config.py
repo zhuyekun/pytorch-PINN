@@ -10,9 +10,11 @@ def get_config() -> ml_collections.ConfigDict:
 
     # Training configuration
     config.train_config.loss_weight = {"interior": 1.0, "boundary": 1.0, "initial": 1.0}
-    config.train_config.epochs = 1000
+    config.train_config.epochs = 100
     config.train_config.lr = 1e-2
     config.train_config.weight_decay = 1e-5
+    config.train_config.save_dir = "/workspaces/pytorch-PINN/results"
+    config.train_config.log_interval = 10
 
     # Model configuration
     config.model_config.units = [2, 128, 128, 128, 1]

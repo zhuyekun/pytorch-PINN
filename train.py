@@ -1,10 +1,13 @@
+import datetime
+import os
+import shutil
+
 import torch
 
 from src.config import get_config
 from src.dataset import DataGenerator1D
 from src.equation import BoundaryCondition, Burgers1D, InitialCondition
-from src.geometry import Rectangle1D
-from src.models import Mlp, ResNet
+from src.models import Mlp
 
 
 def set_requires_grad(tensor_dict, requires_grad=True, device="cuda"):
@@ -29,9 +32,7 @@ def set_requires_grad(tensor_dict, requires_grad=True, device="cuda"):
     return _tensor_dict
 
 
-def train():
-    config = get_config()
-
+def train(config):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # Data pipeline
@@ -90,10 +91,37 @@ def train():
         _loss.backward()
         optimizer.step()
 
-        if i % 1 == 0:
+        if i % cfg_train.log_interval == 0:
             _loss_dict = {k: v.item() for k, v in loss_dict.items()}
             print(f"Step {i}, total loss {_loss.item():.4f}, loss_dict {_loss_dict}")
 
+    print("Training finished!")
+    save_model(model, cfg_train.save_dir)
+
+
+def save_model(model, path="/workspaces/pytorch-PINN/results"):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    now = datetime.datetime.now()
+    timestr = now.strftime("%Y-%m-%d_%H:%M:%S")
+
+    save_path = os.path.join(path, timestr)
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    else:
+        print("The directory already exist. Overwriting...")
+
+    torch.save(model.state_dict(), os.path.join(save_path, "model.pt"))
+
+    # copy config file
+    shutil.copy(
+        "/workspaces/pytorch-PINN/src/config.py", os.path.join(save_path, "config.py")
+    )
+
+    print(f"Model saved to {save_path}")
+
 
 if __name__ == "__main__":
-    train()
+    config = get_config()
+    train(config)
