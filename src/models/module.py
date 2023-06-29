@@ -13,7 +13,7 @@ class Mlp(nn.Module):
         name="mlp",
         **kwargs
     ):
-        super(Mlp, self).__init__()
+        super().__init__()
 
         num_layers = len(units) - 1
         assert num_layers >= 1, "num_layers must be greater than or equal to 1"

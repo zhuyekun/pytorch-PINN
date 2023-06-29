@@ -9,16 +9,16 @@ class Rectangle1D(GeometryBase):
         self.max = max
 
     def sample_boundary(self, num_samples=1, rng=None):
-        assert num_samples <= 2, "num_samples must be less than or equal to 2"
         if rng is None:
             rng = np.random.default_rng()
-        return rng.choice([self.min, self.max], size=(num_samples,))
+        coords = rng.choice([self.min, self.max], size=(num_samples,))
+        return np.array(coords, dtype=np.float32)
 
     def sample_interior(self, num_samples, rng=None):
         if rng is None:
             rng = np.random.default_rng()
         coords = rng.uniform(low=self.min, high=self.max, size=(num_samples,))
-        return coords
+        return np.array(coords, dtype=np.float32)
 
 
 class Rectangle2D(GeometryBase):

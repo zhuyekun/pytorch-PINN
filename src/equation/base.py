@@ -9,5 +9,5 @@ class ConstraintBase(abc.ABC):
     def residual(self):
         pass
 
-    def loss(self, *args):
-        return torch.mean(self.residual(*args) ** 2) * self.loss_weight
+    def loss(self, u, t, x):
+        return torch.mean(self.residual(u, t, x) ** 2)
