@@ -17,9 +17,8 @@ class Burgers1D(ConstraintBase):
     def residual(self, u, t, x):
         u_t = diff(u, t)
         u_x = diff(u, x)
-        # print(u)
         u_xx = diff(u_x, x)
-        # print((u_t + u * u_x - self.nu * u_xx).shape)
+
         return u_t + u * u_x - self.nu * u_xx
 
 
